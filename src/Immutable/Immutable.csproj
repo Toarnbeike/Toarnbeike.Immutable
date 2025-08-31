@@ -15,6 +15,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Toarnbeike.Optional" Version="1.0.1" />
         <PackageReference Include="Toarnbeike.Results.Messaging" Version="1.0.0" />
     </ItemGroup>
     
