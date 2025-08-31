@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <PackageId>Toarnbeike.Immutable</PackageId>
+        <!-- Version is managed centrally in Directory.build.props to keep versions in sync.-->
+        <Description>
+            Immutable domain modeling with source-generated repositories, aggregate roots, and built-in undo/redo support.
+            Designed for desktop applications with snapshot-based persistence and rich domain logic.
+        </Description>
+        <PackageTags>immutable;domain;ddd;aggregate;repository;undo-redo;wpf;desktop;snapshot</PackageTags>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="../../README.md" Pack="true" PackagePath="" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Toarnbeike.Results.Messaging" Version="1.0.0" />
+    </ItemGroup>
+    
+</Project>

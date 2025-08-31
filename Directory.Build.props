@@ -1,0 +1,21 @@
+<Project>
+  <PropertyGroup>
+    <RootNamespace>Toarnbeike.$(MSBuildProjectName)</RootNamespace>
+	<TargetFramework>net9.0</TargetFramework>
+	<ImplicitUsings>enable</ImplicitUsings>
+	<Nullable>enable</Nullable>
+    <LangVersion>preview</LangVersion>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <PropertyGroup>
+	<Company>Toarnbeike</Company>
+	<Authors>Toarnbeike</Authors>
+	<Version>0.1.0</Version>
+	<PackageLicenseExpression>MIT</PackageLicenseExpression>
+	<RepositoryUrl>https://github.com/Toarnbeike/Toarnbeike.Immutable</RepositoryUrl>
+	<PackageProjectUrl>https://github.com/Toarnbeike/Toarnbeike.Immutable</PackageProjectUrl>
+	<RepositoryType>git</RepositoryType>
+	<PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+</Project>
