@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36414.22 d17.14
+VisualStudioVersion = 17.14.36414.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{FCC64D30-CD67-40D9-B7FD-0520333A50AB}"
 EndProject
@@ -23,16 +23,31 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Immutable", "src\Immutable\Immutable.csproj", "{8B6BD61B-7960-46A2-8005-942F93EBF3BB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Immutable.Tests", "tests\Immutable.Tests\Immutable.Tests.csproj", "{F83C30E3-E1D3-4726-AD4D-AAEDEED0083C}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8B6BD61B-7960-46A2-8005-942F93EBF3BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B6BD61B-7960-46A2-8005-942F93EBF3BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B6BD61B-7960-46A2-8005-942F93EBF3BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B6BD61B-7960-46A2-8005-942F93EBF3BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F83C30E3-E1D3-4726-AD4D-AAEDEED0083C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F83C30E3-E1D3-4726-AD4D-AAEDEED0083C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F83C30E3-E1D3-4726-AD4D-AAEDEED0083C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F83C30E3-E1D3-4726-AD4D-AAEDEED0083C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {DF0DB776-BD00-4D9B-ABA0-EFEFFCF81608}
-	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{8B6BD61B-7960-46A2-8005-942F93EBF3BB} = {FCC64D30-CD67-40D9-B7FD-0520333A50AB}
+		{F83C30E3-E1D3-4726-AD4D-AAEDEED0083C} = {6CA56E57-9942-474C-849E-15CED7D017E4}
 	EndGlobalSection
-	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DF0DB776-BD00-4D9B-ABA0-EFEFFCF81608}
 	EndGlobalSection
 EndGlobal
