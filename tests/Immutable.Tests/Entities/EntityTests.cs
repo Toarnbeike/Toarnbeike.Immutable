@@ -1,31 +1,9 @@
-﻿using Toarnbeike.Immutable.Entities;
+﻿using Toarnbeike.Immutable.Tests.TestData;
 
-namespace Toarnbeike.Immutable.Tests;
+namespace Toarnbeike.Immutable.Tests.Entities;
 
 public class EntityTests
 {
-    private readonly record struct TestEntityId(Guid Value) : IEntityKey<TestEntityId>
-    {
-        public static TestEntityId New() => new(Guid.CreateVersion7());
-    }
-
-    private sealed record TestEntity : Entity<TestEntityId>
-    {
-        public string Name { get; init; }
-        
-        // for now hardcoded, in the future generated.
-        public TestEntity(TestEntityId id, string name) : base(id)
-        {
-            Name = name;
-        }
-
-        // for now hardcoded, in the future generated.
-        public TestEntity(string name)
-        {
-            Name = name;
-        }
-    }
-    
     [Fact]
     public void Constructor_Should_AddId_OfCorrectVersion()
     {
