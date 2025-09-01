@@ -136,7 +136,7 @@ public class AggregateRepositoryTests
     [Fact]
     public void GetById_Should_ReturnFailure_WhenIdDoesNotExist()
     {
-        var id = TestEntityId.New();
+        var id = TestEntityId.Empty;
         
         var result =  _repo.GetById(id);
         

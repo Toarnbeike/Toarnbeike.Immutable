@@ -2,7 +2,11 @@
 
 namespace Toarnbeike.Immutable.Tests.TestData;
 
-internal readonly record struct TestEntityId(Guid Value) : IEntityKey<TestEntityId>
-{
-    public static TestEntityId New() => new(Guid.CreateVersion7());
-}
+[EntityKey]
+public readonly partial record struct TestEntityId(Guid Value) : IEntityKey;
+
+// internal readonly partial record struct TestEntityId : IEntityKey<TestEntityId>
+// {
+//     public static TestEntityId New() => new(Guid.CreateVersion7());
+//
+// }
