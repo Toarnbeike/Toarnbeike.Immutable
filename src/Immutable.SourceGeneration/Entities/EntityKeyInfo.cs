@@ -15,7 +15,7 @@ internal record EntityKeyInfo
     /// <summary>
     /// Tries to create a new EntityKeyInfo from an INamedTypeSymbol.
     /// Will work only if a couple of checks are passed:
-    /// - Implements the IEntityKey interface
+    /// - Does not implement the IEntityKey interface
     /// - Does not implement the IEntityKey{TSelf} interface
     /// - Has proper namespace
     /// </summary>
@@ -27,7 +27,7 @@ internal record EntityKeyInfo
         var hasGenericIEntityKey = baseTypes.Any(i => i.Name == "IEntityKey" && i.TypeArguments.Length == 1);
         var hasNameSpace = typeSymbol.ContainingNamespace is not null;
         
-        return hasIEntityKey && !hasGenericIEntityKey && hasNameSpace
+        return !hasIEntityKey && !hasGenericIEntityKey && hasNameSpace
             ? new EntityKeyInfo(typeSymbol) 
             : null;
     }

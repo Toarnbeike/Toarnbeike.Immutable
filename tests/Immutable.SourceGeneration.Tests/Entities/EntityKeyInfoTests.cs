@@ -16,11 +16,9 @@ public class EntityKeyInfoTests
         ns.ToDisplayString().Returns("TestNamespace");
         symbol.ContainingNamespace.Returns(ns);
 
-        var @interface = Substitute.For<INamedTypeSymbol>();
-        @interface.Name.Returns("IEntityKey");
-        @interface.TypeArguments.Returns(ImmutableArray<ITypeSymbol>.Empty);
-        symbol.AllInterfaces.Returns([@interface]);
-
+        // No interfaces
+        symbol.AllInterfaces.Returns(ImmutableArray<INamedTypeSymbol>.Empty);
+        
         var result = EntityKeyInfo.Create(symbol);
 
         result.ShouldNotBeNull();
@@ -29,7 +27,7 @@ public class EntityKeyInfoTests
     }
 
     [Fact]
-    public void Create_Should_ReturnNull_WhenNoIEntityKey()
+    public void Create_Should_ReturnNull_WhenImplementsIEntityKey()
     {
         var symbol = Substitute.For<INamedTypeSymbol>();
         symbol.Name.Returns("TestId");
@@ -38,8 +36,11 @@ public class EntityKeyInfoTests
         ns.ToDisplayString().Returns("TestNamespace");
         symbol.ContainingNamespace.Returns(ns);
 
-        // No IEntityKey interface
-        symbol.AllInterfaces.Returns(ImmutableArray<INamedTypeSymbol>.Empty);
+        // IEntityKey interface
+        var @interface = Substitute.For<INamedTypeSymbol>();
+        @interface.Name.Returns("IEntityKey");
+        @interface.TypeArguments.Returns(ImmutableArray<ITypeSymbol>.Empty);
+        symbol.AllInterfaces.Returns([@interface]);
 
         var result = EntityKeyInfo.Create(symbol);
 
@@ -55,10 +56,10 @@ public class EntityKeyInfoTests
         var ns = Substitute.For<INamespaceSymbol>();
         ns.ToDisplayString().Returns("TestNamespace");
         symbol.ContainingNamespace.Returns(ns);
-
+        
+        // generic IEntityKey interface
         var @interface = Substitute.For<INamedTypeSymbol>();
         @interface.Name.Returns("IEntityKey");
-        // interface has a generic type symbol
         @interface.TypeArguments.Returns([Substitute.For<ITypeSymbol>()]);
         symbol.AllInterfaces.Returns([@interface]);
         

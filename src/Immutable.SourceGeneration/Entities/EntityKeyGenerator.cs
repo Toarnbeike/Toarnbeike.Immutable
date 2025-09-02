@@ -46,7 +46,7 @@ public class EntityKeyGenerator : IIncrementalGenerator
 
                     namespace {{entityKeyInfo.Namespace}};
 
-                    public readonly partial record struct {{entityKeyInfo.Name}} : IEntityKey<{{entityKeyInfo.Name}}>
+                    public readonly partial record struct {{entityKeyInfo.Name}}(Guid Value) : IEntityKey<{{entityKeyInfo.Name}}>
                     {
                         /// <inheritdoc />
                         public static {{entityKeyInfo.Name}} New() => new(Guid.CreateVersion7());
@@ -54,6 +54,6 @@ public class EntityKeyGenerator : IIncrementalGenerator
                         /// <inheritdoc />
                         public static {{entityKeyInfo.Name}} Empty => new(Guid.Empty);
                     }
-""";
+                    """;
     }
 }

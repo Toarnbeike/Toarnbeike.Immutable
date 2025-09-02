@@ -3,4 +3,4 @@
 namespace Toarnbeike.Immutable.Tests.TestData;
 
 [EntityKey]
-public readonly partial record struct TestEntityId(Guid Value) : IEntityKey;
+public readonly partial record struct TestEntityId;
