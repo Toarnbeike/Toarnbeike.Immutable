@@ -20,7 +20,7 @@ public class AggregateRepositoryUndoRedoTests
     [Fact]
     public void Undo_Should_RevertAdd()
     {
-        var entity = new TestEntity("Alice");
+        var entity = TestEntity.CreateNew("Alice");
         _repo.Add(entity);
         
         var result = _mutationStore.Undo();
@@ -32,7 +32,7 @@ public class AggregateRepositoryUndoRedoTests
     [Fact]
     public void Redo_Should_ReapplyAdd_AfterUndo()
     {
-        var entity = new TestEntity("Alice");
+        var entity = TestEntity.CreateNew("Alice");
         _repo.Add(entity);
         _mutationStore.Undo();
         
@@ -45,7 +45,7 @@ public class AggregateRepositoryUndoRedoTests
     [Fact]
     public void Undo_Should_RevertUpdate()
     {
-        var original = new TestEntity("Alice");
+        var original = TestEntity.CreateNew("Alice");
         _repo.Add(original);
         
         var updated = original with { Name = "Bob" };
@@ -60,7 +60,7 @@ public class AggregateRepositoryUndoRedoTests
     [Fact]
     public void Redo_Should_ReapplyUpdate_AfterUndo()
     {
-        var original = new TestEntity("Alice");
+        var original = TestEntity.CreateNew("Alice");
         _repo.Add(original);
         
         var updated =  original with { Name = "Bob" };
@@ -76,7 +76,7 @@ public class AggregateRepositoryUndoRedoTests
     [Fact]
     public void Undo_Should_RevertRemove()
     {
-        var entity = new TestEntity("Alice");
+        var entity = TestEntity.CreateNew("Alice");
         _repo.Add(entity);
         _repo.Remove(entity.Id);
         
@@ -89,7 +89,7 @@ public class AggregateRepositoryUndoRedoTests
     [Fact]
     public void Redo_Should_RevertRemove_AfterUndo()
     {
-        var entity = new TestEntity("Alice");
+        var entity = TestEntity.CreateNew("Alice");
         _repo.Add(entity);
         _repo.Remove(entity.Id);
         

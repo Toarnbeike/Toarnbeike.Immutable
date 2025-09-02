@@ -1,4 +1,5 @@
-﻿using Toarnbeike.Immutable.Tests.TestData;
+﻿using Toarnbeike.Immutable.Entities;
+using Toarnbeike.Immutable.Tests.TestData;
 
 namespace Toarnbeike.Immutable.Tests.Entities;
 
@@ -31,6 +32,13 @@ public class EntityKeyTests
     {
         var actual = TestEntityId.Empty;
         actual.Value.ShouldBe(Guid.Empty);
+    }
+
+    [Fact]
+    public void Empty_Should_BeAccessibleFromInterface()
+    {
+        var x = IEntityKey<TestEntityId>.Empty;
+        x.Value.ShouldBe(Guid.Empty);
     }
 
     [Fact]

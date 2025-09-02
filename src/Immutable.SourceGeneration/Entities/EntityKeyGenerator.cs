@@ -19,7 +19,7 @@ public class EntityKeyGenerator : IIncrementalGenerator
         var entityKeyRecords = context.SyntaxProvider
             .ForAttributeWithMetadataName(
                 EntityKeyInfo.EntityKeyAttributeFqn,
-                predicate: static (node, _) => node is RecordDeclarationSyntax record,
+                predicate: static (node, _) => node is RecordDeclarationSyntax,
                 transform: static (ctx, _) => EntityKeyInfo.Create((INamedTypeSymbol)ctx.TargetSymbol))
             .Where(static m => m is not null);
 

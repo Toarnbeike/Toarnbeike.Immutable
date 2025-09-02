@@ -18,7 +18,7 @@ public class AggregateRepositoryTests
     [Fact]
     public void Add_Should_AddEntityToCollection()
     {
-        var entity = new TestEntity("Alice");
+        var entity = TestEntity.CreateNew("Alice");
         var result = _repo.Add(entity);
         
         result.ShouldBeSuccess();
@@ -28,7 +28,7 @@ public class AggregateRepositoryTests
     [Fact]
     public void Add_Should_RegisterMutation()
     {
-        var entity = new TestEntity("Alice");
+        var entity = TestEntity.CreateNew("Alice");
         var result = _repo.Add(entity);
         
         result.ShouldBeSuccess();
@@ -39,8 +39,8 @@ public class AggregateRepositoryTests
     public void Add_Should_ReturnFailure_WhenIdAlreadyExists()
     {
         var id = TestEntityId.New();
-        var entity1 = new TestEntity(id, "Alice");
-        var entity2 = new TestEntity(id, "Bob");
+        var entity1 = TestEntity.CreateExisting(id, "Alice");
+        var entity2 = TestEntity.CreateExisting(id, "Bob");
         
         _repo.Add(entity1);
         
@@ -53,7 +53,7 @@ public class AggregateRepositoryTests
     [Fact]
     public void Update_Should_UpdateEntity()
     {
-        var entity = new TestEntity("Alice");
+        var entity = TestEntity.CreateNew("Alice");
         _repo.Add(entity);
         
         var updated = entity with { Name = "Bob" };
@@ -66,7 +66,7 @@ public class AggregateRepositoryTests
     [Fact]
     public void Update_Should_RegisterMutation()
     {
-        var entity = new TestEntity("Alice");
+        var entity = TestEntity.CreateNew("Alice");
         _repo.Add(entity);
         
         var updated = entity with { Name = "Bob" };
@@ -80,7 +80,7 @@ public class AggregateRepositoryTests
     [Fact]
     public void Update_Should_ReturnFailure_WhenIdDoesNotExist()
     {
-        var entity = new TestEntity("Alice");
+        var entity = TestEntity.CreateNew("Alice");
         
         var result =  _repo.Update(entity);
         
@@ -91,7 +91,7 @@ public class AggregateRepositoryTests
     [Fact]
     public void Remove_Should_RemoveEntityFromCollection()
     {
-        var entity = new TestEntity("Alice");
+        var entity = TestEntity.CreateNew("Alice");
         _repo.Add(entity);
 
         var result = _repo.Remove(entity.Id);
@@ -103,7 +103,7 @@ public class AggregateRepositoryTests
     [Fact]
     public void Remove_Should_RegisterMutation()
     {
-        var entity = new TestEntity("Alice");
+        var entity = TestEntity.CreateNew("Alice");
         _repo.Add(entity);
         
         var result = _repo.Remove(entity.Id);
@@ -116,7 +116,7 @@ public class AggregateRepositoryTests
     [Fact]
     public void Remove_Should_ReturnFailure_WhenIdDoesNotExist()
     {
-        var entity = new TestEntity("Alice");
+        var entity = TestEntity.CreateNew("Alice");
         
         var result = _repo.Remove(entity.Id);
         
@@ -126,7 +126,7 @@ public class AggregateRepositoryTests
     [Fact]
     public void GetById_Should_ReturnEntity()
     {
-        var entity = new TestEntity("Alice");
+        var entity = TestEntity.CreateNew("Alice");
         _repo.Add(entity);
         
         var result = _repo.GetById(entity.Id);
@@ -146,7 +146,7 @@ public class AggregateRepositoryTests
     [Fact]
     public void FirstOrNone_Should_ReturnEntity()
     {
-        var entity = new TestEntity("Alice");
+        var entity = TestEntity.CreateNew("Alice");
         _repo.Add(entity);
 
         var result = _repo.FirstOrNone(e => e.Name == "Alice");
@@ -157,7 +157,7 @@ public class AggregateRepositoryTests
     [Fact]
     public void FirstOrNone_Should_ReturnNone_WhenNoEntityIsFound()
     {
-        var entity = new  TestEntity("Alice");
+        var entity = TestEntity.CreateNew("Alice");
         _repo.Add(entity);
         
         var result = _repo.FirstOrNone(e => e.Name == "Bob");
@@ -167,8 +167,8 @@ public class AggregateRepositoryTests
     [Fact]
     public void FirstOrNone_Should_ReturnFirstInstance_WhenMultipleAreFound()
     {
-        _repo.Add(new TestEntity("Alice"));
-        _repo.Add(new TestEntity("Amanda"));
+        _repo.Add(TestEntity.CreateNew("Alice"));
+        _repo.Add(TestEntity.CreateNew("Amanda"));
         
         var result = _repo.FirstOrNone(e => e.Name.StartsWith('A'));
         
@@ -178,9 +178,9 @@ public class AggregateRepositoryTests
     [Fact]
     public void GetAll_Should_ReturnAllEntities()
     {
-        _repo.Add(new TestEntity("Alice"));
-        _repo.Add(new TestEntity("Bob"));
-        _repo.Add(new TestEntity("Charlie"));
+        _repo.Add(TestEntity.CreateNew("Alice"));
+        _repo.Add(TestEntity.CreateNew("Bob"));
+        _repo.Add(TestEntity.CreateNew("Charlie"));
         
         var result = _repo.GetAll();
         
@@ -197,9 +197,9 @@ public class AggregateRepositoryTests
     [Fact]
     public void GetWhere_Should_ReturnAllEntities_ThatMatchPredicate()
     {
-        _repo.Add(new TestEntity("Alice"));
-        _repo.Add(new TestEntity("Amanda"));
-        _repo.Add(new TestEntity("Bob"));
+        _repo.Add(TestEntity.CreateNew("Alice"));
+        _repo.Add(TestEntity.CreateNew("Amanda"));
+        _repo.Add(TestEntity.CreateNew("Bob"));
         
         var result = _repo.Where(e => e.Name.StartsWith('A'));
         result.Count().ShouldBe(2);
@@ -208,9 +208,9 @@ public class AggregateRepositoryTests
     [Fact]
     public void GetWhere_Should_ReturnEmpty_WhenNoEntitiesAreFound()
     {
-        _repo.Add(new TestEntity("Alice"));
-        _repo.Add(new TestEntity("Amanda"));
-        _repo.Add(new TestEntity("Bob"));
+        _repo.Add(TestEntity.CreateNew("Alice"));
+        _repo.Add(TestEntity.CreateNew("Amanda"));
+        _repo.Add(TestEntity.CreateNew("Bob"));
         
         var result = _repo.Where(e => e.Name.StartsWith('C'));
         result.ShouldBeEmpty();
@@ -219,7 +219,7 @@ public class AggregateRepositoryTests
     [Fact]
     public void GetWhere_Should_ReturnEmpty_WhenCollectionIsEmpty()
     {
-        var result = _repo.Where(e => true);
+        var result = _repo.Where(e => e.Name.StartsWith('C'));
         result.ShouldBeEmpty();
     }
 }

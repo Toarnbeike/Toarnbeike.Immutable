@@ -22,7 +22,7 @@ namespace Toarnbeike.Immutable.Repositories;
 /// <typeparam name="TEntity">The aggregate root entity type that implements <see cref="IEntity{TKey}"/></typeparam>
 /// <typeparam name="TKey">The strongly-typed entity key that implements <see cref="IEntityKey{TKey}"/></typeparam>
 public interface IAggregateRepository<TEntity, in TKey>
-    where TEntity : IAggregate<TKey>
+    where TEntity : IEntity<TKey>
     where TKey : struct, IEntityKey<TKey>
 {
     /// <summary>

@@ -18,7 +18,7 @@ namespace Toarnbeike.Immutable.Repositories;
 /// <typeparam name="TKey">The strongly-typed entity key that implements <see cref="IEntityKey{TKey}"/></typeparam>
 /// <param name="mutationStore">The mutation store used for change tracking and undo/redo functionality</param>
 public abstract class AggregateRepository<TEntity, TKey>(IMutationStore mutationStore)  : IAggregateRepository<TEntity, TKey>
-    where TEntity : IAggregate<TKey>
+    where TEntity : IEntity<TKey>
     where TKey : struct, IEntityKey<TKey> 
 {
     private readonly string _entityName = typeof(TEntity).Name;
