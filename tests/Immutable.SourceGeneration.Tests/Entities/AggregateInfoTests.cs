@@ -1,52 +1,40 @@
 ﻿using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Toarnbeike.Immutable.SourceGeneration.Entities;
+using Toarnbeike.Immutable.SourceGeneration.Tests.TestHelpers;
 
 namespace Toarnbeike.Immutable.SourceGeneration.Tests.Entities;
 
 public class AggregateInfoTests
 {
     [Fact]
-    public void Create_Should_ReturnInfo_WhenValid()
+    public void Create_Should_ExtractKeyInfo()
     {
-        var symbol = Substitute.For<INamedTypeSymbol>();
-        symbol.Name.Returns("TestAggregate");
+        const string source = """
+                              namespace TestNamespace
+                              {
+                                  public interface IEntity<TKey> { }
 
-        var ns = Substitute.For<INamespaceSymbol>();
-        ns.ToDisplayString().Returns("TestNamespace");
-        symbol.ContainingNamespace.Returns(ns);
+                                  public sealed record TestAggregate : IEntity<TestEntityId>, IAggregate
+                                  {
+                                      public string Name { get; init; }
+                                  }
+                              }
+                              """;
 
-        var aggregateInterface = Substitute.For<INamedTypeSymbol>();
-        aggregateInterface.Name.Returns("IAggregate");
-        aggregateInterface.TypeArguments.Returns(ImmutableArray<ITypeSymbol>.Empty);
+        var symbol = RoslynTestHelper.GetNamedTypeSymbol(source, "TestNamespace.TestAggregate");
 
-        var typeArgument = Substitute.For<ITypeSymbol>();
-        typeArgument.DeclaringSyntaxReferences.Returns(ImmutableArray<SyntaxReference>.Empty);
-        
-        var entityInterface = Substitute.For<INamedTypeSymbol>();
-        entityInterface.Name.Returns("IEntity");
-        entityInterface.TypeArguments.Returns([typeArgument]);
+        var aggregateInfo = AggregateInfo.Create(symbol);
 
-        symbol.AllInterfaces.Returns([aggregateInterface, entityInterface]);
+        aggregateInfo.ShouldNotBeNull();
+        aggregateInfo.Name.ShouldBe("TestAggregate");
+        aggregateInfo.Namespace.ShouldBe("TestNamespace");
+        aggregateInfo.Properties.Single().Name.ShouldBe("Name");
 
-        // Mock de properties
-        var propertySymbol = Substitute.For<IPropertySymbol>();
-        propertySymbol.Name.Returns("Id");
-        propertySymbol.DeclaredAccessibility.Returns(Accessibility.Public);
-        propertySymbol.Type.Returns(Substitute.For<ITypeSymbol>());
-        propertySymbol.Type.ToDisplayString().Returns("System.Guid");
-
-        symbol.GetMembers().Returns([propertySymbol]);
-
-        var result = AggregateInfo.Create(symbol);
-
-        result.ShouldNotBeNull();
-        result!.Name.ShouldBe("TestAggregate");
-        result.Namespace.ShouldBe("TestNamespace");
-        result.Properties.Count.ShouldBe(1);
-        result.Properties[0].Name.ShouldBe("Id");
+        aggregateInfo.EntityKeyInfo.ShouldNotBeNull();
+        aggregateInfo.EntityKeyInfo.Name.ShouldBe("TestEntityId");
     }
-
+    
     [Fact]
     public void Create_Should_ReturnNull_WhenNoIAggregate()
     {

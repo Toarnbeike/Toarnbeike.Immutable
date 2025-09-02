@@ -56,8 +56,9 @@ public class AggregateGenerator : IIncrementalGenerator
                  // generator: Toarnbeike.Immutable.SourceGeneration.Entities.AggregateGenerator
                  #nullable enable
 
+                 using {{aggregateInfo.EntityKeyInfo.Namespace}};
+                 
                  namespace {{aggregateInfo.Namespace}};
-
                  public partial record {{aggregateInfo.Name}}
                  {
                      /// <summary>
@@ -69,11 +70,10 @@ public class AggregateGenerator : IIncrementalGenerator
                      /// <summary>
                      /// Recreate an existing instance of the {{aggregateInfo.Name}}.
                      /// </summary>
-                     public static {{aggregateInfo.Name}} CreateExisting({{aggregateInfo.Name}}Id id{{(props.Count > 0 ? ", " + initParams : "")}}) =>
+                     public static {{aggregateInfo.Name}} CreateExisting({{aggregateInfo.EntityKeyInfo.Name}} id{{(props.Count > 0 ? ", " + initParams : "")}}) =>
                          new(id{{(props.Count > 0 ? ", " + string.Join(", ", props.Select(p => p.Name.ToParameterName())) : "")}});
 
-                     private {{aggregateInfo.Name}}({{existingParams}})
-                         : base(id)
+                     private {{aggregateInfo.Name}}({{existingParams}}) : base(id)
                      {
                  {{assignments}}
                      }

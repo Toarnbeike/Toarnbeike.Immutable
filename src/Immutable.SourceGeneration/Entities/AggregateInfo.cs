@@ -11,12 +11,15 @@ internal record AggregateInfo
     public string Namespace { get; }
 
     public IReadOnlyList<PropertyInfo> Properties { get; }
+ 
+    public EntityKeyInfo EntityKeyInfo { get; }
     
-    private AggregateInfo(INamedTypeSymbol typeSymbol)
+    private AggregateInfo(INamedTypeSymbol typeSymbol, EntityKeyInfo entityKeyInfo)
     {
         Name = typeSymbol.Name;
         Namespace = typeSymbol.ContainingNamespace!.ToDisplayString();
         Properties = typeSymbol.GetOrderedProperties();
+        EntityKeyInfo = entityKeyInfo;
     }
 
     /// <summary>
@@ -31,11 +34,16 @@ internal record AggregateInfo
     {
         var baseTypes = typeSymbol.AllInterfaces;
         var hasIAggregate = baseTypes.Any(i => i.Name == "IAggregate" && i.TypeArguments.Length == 0);
-        var hasEntity = baseTypes.Any(i => i.Name == "IEntity" && i.TypeArguments.Length == 1);
         var hasNameSpace = typeSymbol.ContainingNamespace is not null;
         
-        return hasIAggregate && hasEntity && hasNameSpace
-            ? new AggregateInfo(typeSymbol) 
+        var entityInterface = baseTypes.FirstOrDefault(i => i.Name == "IEntity" && i.TypeArguments.Length == 1);
+        var hasEntity = entityInterface is not null;
+        var keyInfo = entityInterface?.TypeArguments[0] is INamedTypeSymbol keyType 
+            ? EntityKeyInfo.Create(keyType) 
+            : null;
+        
+        return hasIAggregate && hasEntity && hasNameSpace && keyInfo is not null
+            ? new AggregateInfo(typeSymbol, keyInfo) 
             : null;
     }
 }
