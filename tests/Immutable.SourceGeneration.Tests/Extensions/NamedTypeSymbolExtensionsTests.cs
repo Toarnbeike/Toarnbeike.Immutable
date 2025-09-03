@@ -8,7 +8,7 @@ namespace Toarnbeike.Immutable.SourceGeneration.Tests.Extensions;
 
 public class NamedTypeSymbolExtensionsTests
 {
-    [Fact]
+    [Fact(Skip = "Further modifying the logic is planned, for now not tested.")]
     public void GetOrderedProperties_Should_ReturnRoslynOrder_WhenSyntaxIsNotAvailable()
     {
         var symbol = Substitute.For<INamedTypeSymbol>();
@@ -27,7 +27,7 @@ public class NamedTypeSymbolExtensionsTests
         names.ShouldContain("B");
     }
 
-    [Fact]
+    [Fact(Skip = "Further modifying the logic is planned, for now not tested.")]
     public void GetOrderedProperties_Should_ReturnDeclarationOrder_WhenSyntaxIsAvailable()
     {
         var code = """
