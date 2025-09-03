@@ -1,4 +1,5 @@
 ﻿using Toarnbeike.Immutable.Tests.TestData;
+using Toarnbeike.Optional.TestExtensions;
 
 namespace Toarnbeike.Immutable.Tests.Entities;
 
@@ -43,5 +44,26 @@ public class EntityTests
         newEntity.Id.ShouldBe(entity.Id);
         
         entity.Name.ShouldBe("Test");
+    }
+
+    [Fact]
+    public void CreateNew_Should_AllowOverwrite_OfOptionalDefaultValue()
+    {
+        var entity = TestEntity.CreateNew("Test", description: "Described");
+        entity.Description.ShouldBeSomeWithValue("Described");
+    }
+
+    [Fact]
+    public void CreateNew_Should_AllowOverwrite_OfNullableDefaultValue()
+    {
+        var entity = TestEntity.CreateNew("Test", dateOfBirth: DateTime.UtcNow);
+        entity.DateOfBirth.ShouldNotBeNull();
+    }
+
+    [Fact]
+    public void CreateNew_Should_AllowOverwrite_OfDefaultValueType()
+    {
+        var entity = TestEntity.CreateNew("Test", yearOfEntry: 2020);
+        entity.YearOfEntry.ShouldBe(2020);
     }
 }

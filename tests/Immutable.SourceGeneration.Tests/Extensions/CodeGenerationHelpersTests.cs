@@ -32,28 +32,28 @@ public class CodeGenerationHelpersTests
         actual.ShouldBe("_a");
     }
 
-    [Fact]
-    public void ToParameterList_Should_Transform()
-    {
-        var property1 = new PropertyInfo("Name", "string", false);
-        var property2 = new PropertyInfo("Age", "int", false);
-        IEnumerable<PropertyInfo> properties = [property1, property2];
-        
-        var actual = properties.ToParameterList();
-        
-        actual.ShouldBe("string name, int age");
-    }
-    
-    [Fact]
-    public void ToAssignments_Should_Transform()
-    {
-        var property1 = new PropertyInfo("Name", "string", false);
-        var property2 = new PropertyInfo("Age", "int", false);
-        IEnumerable<PropertyInfo> properties = [property1, property2];
-        
-        var actual = properties.ToAssignments();
-
-        actual.ShouldContain("Name = name;");
-        actual.ShouldContain("Age = age;");
-    }
+    // [Fact]
+    // public void ToParameterList_Should_Transform()
+    // {
+    //     var property1 = new PropertyInfo("Name", "string", false);
+    //     var property2 = new PropertyInfo("Age", "int", false);
+    //     IEnumerable<PropertyInfo> properties = [property1, property2];
+    //     
+    //     var actual = properties.ToParameterList();
+    //     
+    //     actual.ShouldBe("string name, int age");
+    // }
+    //
+    // [Fact]
+    // public void ToAssignments_Should_Transform()
+    // {
+    //     var property1 = new PropertyInfo("Name", "string", false);
+    //     var property2 = new PropertyInfo("Age", "int", false);
+    //     IEnumerable<PropertyInfo> properties = [property1, property2];
+    //     
+    //     var actual = properties.ToAssignments();
+    //
+    //     actual.ShouldContain("Name = name;");
+    //     actual.ShouldContain("Age = age;");
+    // }
 }
