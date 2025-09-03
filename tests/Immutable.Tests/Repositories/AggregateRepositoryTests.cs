@@ -8,11 +8,12 @@ namespace Toarnbeike.Immutable.Tests.Repositories;
 public class AggregateRepositoryTests
 {
     private readonly IMutationStore _mockMutationStore = Substitute.For<IMutationStore>();
+    private readonly DataContext _dataContext = new();
     private readonly ITestEntityRepository _repo;
 
     public AggregateRepositoryTests()
     {
-        _repo = new TestEntityRepository(_mockMutationStore);
+        _repo = new TestEntityRepository(_mockMutationStore, _dataContext);
     }
 
     [Fact]

@@ -10,11 +10,12 @@ namespace Toarnbeike.Immutable.Tests.Repositories;
 public class AggregateRepositoryUndoRedoTests
 {
     private readonly MutationStore _mutationStore = new();
+    private readonly DataContext _dataContext = new();
     private readonly ITestEntityRepository _repo;
 
     public AggregateRepositoryUndoRedoTests()
     {
-        _repo = new TestEntityRepository(_mutationStore);
+        _repo = new TestEntityRepository(_mutationStore, _dataContext);
     }
 
     [Fact]
