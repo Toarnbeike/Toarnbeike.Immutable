@@ -9,13 +9,16 @@
         </Description>
         <PackageTags>immutable;domain;ddd;aggregate;repository;undo-redo;wpf;desktop;snapshot</PackageTags>
     </PropertyGroup>
-
+    
     <ItemGroup>
         <None Include="../../README.md" Pack="true" PackagePath="" />
     </ItemGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\Immutable.SourceGeneration\Immutable.SourceGeneration.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="all" />
+    <!-- Only add the source generator when creating a package, not when building no -->
+    <ItemGroup Condition="'$(PackBuildOutput)' == 'true'">
+        <ProjectReference Include="..\Immutable.SourceGeneration\Immutable.SourceGeneration.csproj"
+                          OutputItemType="Analyzer"
+                          ReferenceOutputAssembly="false" />
     </ItemGroup>
     
     <ItemGroup>

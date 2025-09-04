@@ -1,6 +1,6 @@
 ﻿using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
-using Toarnbeike.Immutable.SourceGeneration.Entities;
+using Toarnbeike.Immutable.SourceGeneration.TypeInformation;
 
 namespace Toarnbeike.Immutable.SourceGeneration.Tests.Entities;
 

@@ -1,16 +1,13 @@
 using Microsoft.CodeAnalysis;
 
-namespace Toarnbeike.Immutable.SourceGeneration.Entities;
+namespace Toarnbeike.Immutable.SourceGeneration.TypeInformation;
 
-internal record EntityKeyInfo
+internal record EntityKeyInfo : TypeInfo
 {
     public const string EntityKeyAttributeFqn = "Toarnbeike.Immutable.Entities.EntityKeyAttribute";
     
-    public string Name { get; }
-    public string Namespace { get; }
-    
-    private EntityKeyInfo(INamedTypeSymbol typeSymbol) => 
-        (Name, Namespace) = (typeSymbol.Name, typeSymbol.ContainingNamespace!.ToDisplayString());
+    public EntityKeyInfo(string name, string @namespace) : base(name, @namespace) { }
+    private EntityKeyInfo(INamedTypeSymbol symbol) : base(symbol) { }
 
     /// <summary>
     /// Tries to create a new EntityKeyInfo from an INamedTypeSymbol.

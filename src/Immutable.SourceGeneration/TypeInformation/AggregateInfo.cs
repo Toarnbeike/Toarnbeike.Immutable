@@ -1,20 +1,16 @@
 using Microsoft.CodeAnalysis;
 using Toarnbeike.Immutable.SourceGeneration.Extensions;
 
-namespace Toarnbeike.Immutable.SourceGeneration.Entities;
+namespace Toarnbeike.Immutable.SourceGeneration.TypeInformation;
 
-internal record AggregateInfo
+internal record AggregateInfo : TypeInfo
 {
     public const string AggregateAttributeFqn = "Toarnbeike.Immutable.Entities.AggregateAttribute";
-    
-    public string Name { get; }
-    public string Namespace { get; }
 
-    public IReadOnlyList<PropertyInfo> Properties { get; }
- 
     public EntityKeyInfo EntityKeyInfo { get; }
+    public IReadOnlyList<PropertyInfo> Properties { get; }
     
-    private AggregateInfo(INamedTypeSymbol typeSymbol, EntityKeyInfo entityKeyInfo)
+    private AggregateInfo(INamedTypeSymbol typeSymbol, EntityKeyInfo entityKeyInfo) : base(typeSymbol)
     {
         Name = typeSymbol.Name;
         Namespace = typeSymbol.ContainingNamespace!.ToDisplayString();
@@ -22,6 +18,13 @@ internal record AggregateInfo
         EntityKeyInfo = entityKeyInfo;
     }
 
+    public AggregateInfo(string name, string @namespace, EntityKeyInfo entityKeyInfo,
+        params IReadOnlyList<PropertyInfo> properties) : base(name, @namespace)
+    {
+        EntityKeyInfo = entityKeyInfo;
+        Properties = properties;
+    }
+    
     /// <summary>
     /// Tries to create a new AggregateInfo from an INamedTypeSymbol.
     /// Will work only if a couple of checks are passed:
@@ -34,7 +37,7 @@ internal record AggregateInfo
     {
         var baseTypes = typeSymbol.AllInterfaces;
         var hasIAggregate = baseTypes.Any(i => i.Name == "IAggregate" && i.TypeArguments.Length == 0);
-        var hasNameSpace = typeSymbol.ContainingNamespace is not null;
+        var hasNameSpace = typeSymbol.ContainingNamespace is not null && !typeSymbol.ContainingNamespace.IsGlobalNamespace;
         
         var entityInterface = baseTypes.FirstOrDefault(i => i.Name == "IEntity" && i.TypeArguments.Length == 1);
         var hasEntity = entityInterface is not null;

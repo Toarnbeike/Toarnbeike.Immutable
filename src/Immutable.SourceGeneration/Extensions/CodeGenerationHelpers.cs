@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Toarnbeike.Immutable.SourceGeneration.TypeInformation;
 
 namespace Toarnbeike.Immutable.SourceGeneration.Extensions;
 

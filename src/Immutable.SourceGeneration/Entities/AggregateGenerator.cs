@@ -1,127 +1,64 @@
-﻿using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
-using System.Text;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Text;
-using Toarnbeike.Immutable.SourceGeneration.Extensions;
+﻿using Toarnbeike.Immutable.SourceGeneration.Extensions;
+using Toarnbeike.Immutable.SourceGeneration.TypeInformation;
 
 namespace Toarnbeike.Immutable.SourceGeneration.Entities;
 
-/* Todo: De grote Generator verbouwing:
- * - 1 Generator maken die alle ForAttributeWithMetadataName scanning gaat doen.
- *  - Hier dus ook de EntityKeyGenerator aan toevoegen. Dit wordt de ToarnbeikeImmutableSourceGenerator
- * - Aparte methode per attribute scan: private static IncrementalValuesProvider<AggregateInfo> GetAttributes()
- * - context.RegisterSourceOutput per file die moet worden aangemaakt.
- * - Execute methods in aparte static classes, die een static Execute method krijgen
- * - Zippen (Combine en Collect) van IncrementalValuesProvider<T> waar nodig.
- * *
- * *** Nice to haves ***
- * *
- * - PropertyInfo, AggregateInfo, EntityKeyInfo af laten leiden van een base ObjectInfo
- * - Internal constructors maken die ook voor unit testen e.d. eenvoudig Info objecten kan toevoegen.
- * - Unit testen schrijven voor de Execute methods op de static generator classes.
- * - Doordat de Info objecten aangemaakt kunnen worden zonder Source generator wordt de unit test eenvoudig maar krachtig.
- */
-/// <summary>
-/// Generates a partial implementation of an Entity{TKey},
-/// given that the entity contains an [Aggregate] attribute.
-/// Provides private constructors and static factory methods. 
-/// </summary>
-[Generator]
-[ExcludeFromCodeCoverage]
-public class AggregateGenerator : IIncrementalGenerator
+internal static class AggregateGenerator
 {
-    public void Initialize(IncrementalGeneratorInitializationContext context)
+    public static string Execute(AggregateInfo aggregate)
     {
-        //if (!Debugger.IsAttached) Debugger.Launch();
-
-        var aggregates = context.SyntaxProvider
-            .ForAttributeWithMetadataName(
-                AggregateInfo.AggregateAttributeFqn,
-                predicate: static (node, _) => true,
-                transform: (ctx, _) => AggregateInfo.Create((INamedTypeSymbol)ctx.TargetSymbol)
-            ).Where(static aggregate => aggregate is not null);
-
-        // Per aggregate: An partial entity and a partial repository
-        context.RegisterSourceOutput(aggregates, static (spc, aggregate) => Execute(spc, aggregate!));
-        
-        // Over all aggregates: the DataContext and IDataContext files
-        var aggregateCollection = aggregates.Collect();
-        context.RegisterSourceOutput(aggregateCollection, static (spc, list) => ExecuteAll(spc, list));
-    }
-
-    private static void Execute(SourceProductionContext context, AggregateInfo aggregateInfo)
-    {
-        var aggregatePartial = GenerateAggregateImplementation(aggregateInfo);
-        var aggregatePartialFileName = $"{aggregateInfo.Namespace}.{aggregateInfo.Name}.g.cs";
-        context.AddSource(aggregatePartialFileName, SourceText.From(aggregatePartial, Encoding.UTF8));
-
-        var repoPartial = GenerateRepositoryImplementation(aggregateInfo);
-        var repoPartialFileName = $"{aggregateInfo.Namespace}.{aggregateInfo.Name}Repository.g.cs";
-        context.AddSource(repoPartialFileName, SourceText.From(repoPartial, Encoding.UTF8));
-    }
-
-    private static void ExecuteAll(SourceProductionContext context, ImmutableArray<AggregateInfo?> aggregates)
-    {
-        var dataContextPartial = GenerateDataContext(aggregates.Select(x => x!).ToList());
-        var dataContextPartialFileName = "Toarnbeike.Immutable.Internal.DataContext.g.cs";
-        context.AddSource(dataContextPartialFileName,  SourceText.From(dataContextPartial, Encoding.UTF8));
-    }
-    
-    private static string GenerateAggregateImplementation(AggregateInfo aggregateInfo)
-    {
-        var createNewParameters = aggregateInfo.Properties.ToParameterList(includeDefault: true);
-        var createNewConstructorParameters = string.Join(", ", aggregateInfo.Properties
+        var createNewParameters = aggregate.Properties.ToParameterList(includeDefault: true);
+        var createNewConstructorParameters = string.Join(", ", aggregate.Properties
             .Where(p => !p.HasDefaultValue && !p.IsReadOnly)
             .Select(p => p.Name.ToParameterName()));
 
-        var createExistingParameters = aggregateInfo.Properties.ToParameterList(
-            prefix: $"{aggregateInfo.EntityKeyInfo.Name} id", includeDefault: true);
+        var createExistingParameters = aggregate.Properties.ToParameterList(
+            prefix: $"{aggregate.EntityKeyInfo.Name} id", includeDefault: true);
         var createExistingConstructorParameters = "id" + (string.IsNullOrEmpty(createNewConstructorParameters) ? "" : ", " + createNewConstructorParameters);
         
-        var newConstructorParams = aggregateInfo.Properties.ToParameterList();
-        var existingConstructorParams = aggregateInfo.Properties.ToParameterList(
-            prefix: $"{aggregateInfo.EntityKeyInfo.Name} id", includeDefault: false);
+        var newConstructorParams = aggregate.Properties.ToParameterList();
+        var existingConstructorParams = aggregate.Properties.ToParameterList(
+            prefix: $"{aggregate.EntityKeyInfo.Name} id", includeDefault: false);
         
-        var notNullAssignment = aggregateInfo.Properties.ToNotNullAssignments("entity");
-        var constructorAssignments = aggregateInfo.Properties.ToAssignments();
+        var notNullAssignment = aggregate.Properties.ToNotNullAssignments("entity");
+        var constructorAssignments = aggregate.Properties.ToAssignments();
         
         return $$"""
                  // <auto-generated />
                  // generator: Toarnbeike.Immutable.SourceGeneration.Entities.AggregateGenerator
                  #nullable enable
 
-                 using {{aggregateInfo.EntityKeyInfo.Namespace}};
+                 using {{aggregate.EntityKeyInfo.Namespace}};
 
-                 namespace {{aggregateInfo.Namespace}};
-                 public partial record {{aggregateInfo.Name}}
+                 namespace {{aggregate.Namespace}};
+                 public partial record {{aggregate.Name}}
                  {
                      /// <summary>
-                     /// Create a new instance of the {{aggregateInfo.Name}}.
+                     /// Create a new instance of the {{aggregate.Name}}.
                      /// </summary>
-                     public static {{aggregateInfo.Name}} CreateNew({{createNewParameters}})
+                     public static {{aggregate.Name}} CreateNew({{createNewParameters}})
                      {
-                         var entity = new {{aggregateInfo.Name}}({{createNewConstructorParameters}});
+                         var entity = new {{aggregate.Name}}({{createNewConstructorParameters}});
                  {{notNullAssignment}}
                          return entity;
                      }
                      
                      /// <summary>
-                     /// Recreate an existing instance of the {{aggregateInfo.Name}}.
+                     /// Recreate an existing instance of the {{aggregate.Name}}.
                      /// </summary>
-                     public static {{aggregateInfo.Name}} CreateExisting({{createExistingParameters}})
+                     public static {{aggregate.Name}} CreateExisting({{createExistingParameters}})
                      {
-                         var entity = new {{aggregateInfo.Name}}({{createExistingConstructorParameters}});
+                         var entity = new {{aggregate.Name}}({{createExistingConstructorParameters}});
                  {{notNullAssignment}}
                          return entity;
                      }
 
-                     private {{aggregateInfo.Name}}({{existingConstructorParams}}) : base(id)
+                     private {{aggregate.Name}}({{existingConstructorParams}}) : base(id)
                      {
                         {{constructorAssignments}}
                      }
 
-                     private {{aggregateInfo.Name}}({{newConstructorParams}})
+                     private {{aggregate.Name}}({{newConstructorParams}})
                      {
                         {{constructorAssignments}}
                      }
@@ -129,69 +66,6 @@ public class AggregateGenerator : IIncrementalGenerator
                  """;
     }
 
-    private static string GenerateRepositoryImplementation(AggregateInfo aggregateInfo)
-    {
-        var repoName = $"{aggregateInfo.Name}Repository";
-        var genericTypeCouple = $"<{aggregateInfo.Name}, {aggregateInfo.EntityKeyInfo.Name}>";
-        
-        return $$"""
-                // <auto-generated />
-                // generator: Toarnbeike.Immutable.SourceGeneration.Entities.AggregateGenerator
-                #nullable enable
-                
-                using {{aggregateInfo.EntityKeyInfo.Namespace}};
-                using Toarnbeike.Immutable.Internal;
-                using Toarnbeike.Immutable.Mutations;
-                using Toarnbeike.Immutable.Repositories;
-                
-                namespace {{aggregateInfo.Namespace}};
-                
-                public partial interface I{{repoName}} : IAggregateRepository{{genericTypeCouple}};
-                
-                public partial class {{repoName}} : AggregateRepository{{genericTypeCouple}}, I{{repoName}}
-                {
-                    public {{repoName}}(IMutationStore mutationStore, IDataContext dataContext) : base(mutationStore)
-                    {
-                        Entities = dataContext.{{aggregateInfo.Name}}s;
-                    }
-                }
-                """;
-    }
-
-    private static string GenerateDataContext(List<AggregateInfo> aggregates)
-    {
-        var entityUsings = string.Join("\n", aggregates
-            .Select(x => x.Namespace)
-            .Distinct()
-            .Select(u => $"using {u};"));
-
-        var interfaceDictionaries = string.Join("\n    ", aggregates
-            .Select(aggregate => $$"""Dictionary<{{GetDictionaryCouple(aggregate)}}> {{aggregate.Name}}s { get; }"""));
-        
-        var classDictionaries = string.Join("\n    ", aggregates
-            .Select(aggregate => $$"""public Dictionary<{{GetDictionaryCouple(aggregate)}}> {{aggregate.Name}}s { get; private set; } = new(); """));
-        
-        return $$"""
-                 // <auto-generated />
-                 // generator: Toarnbeike.Immutable.SourceGeneration.Entities.AggregateGenerator
-                 #nullable enable
-
-                 {{entityUsings}}
-
-                 namespace Toarnbeike.Immutable.Internal.DataContext;
-
-                 public partial interface IDataContext
-                 {
-                     {{interfaceDictionaries}}  
-                 }
-
-                 public sealed partial class DataContext : IDataContext
-                 {
-                     {{classDictionaries}}
-                 }
-                 """;
-    }
-
-    private static string GetDictionaryCouple(AggregateInfo aggregate) =>
-        $"{aggregate.EntityKeyInfo.Name}, {aggregate.Name}";
+    public static string FileName(AggregateInfo aggregate) => 
+        $"{aggregate.Namespace}.{aggregate.Name}.g.cs";
 }

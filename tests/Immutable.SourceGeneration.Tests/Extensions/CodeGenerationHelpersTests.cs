@@ -1,4 +1,5 @@
 ﻿using Toarnbeike.Immutable.SourceGeneration.Extensions;
+using Toarnbeike.Immutable.SourceGeneration.TypeInformation;
 
 namespace Toarnbeike.Immutable.SourceGeneration.Tests.Extensions;
 

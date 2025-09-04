@@ -1,7 +1,7 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace Toarnbeike.Immutable.SourceGeneration;
+namespace Toarnbeike.Immutable.SourceGeneration.TypeInformation;
 
 internal record PropertyInfo
 {

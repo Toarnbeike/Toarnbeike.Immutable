@@ -13,7 +13,12 @@
         <PackageReference Include="xunit" Version="2.9.2"/>
         <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2"/>
     </ItemGroup>
-
+    
+    <PropertyGroup>
+        <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+        <CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)Generated</CompilerGeneratedFilesOutputPath>
+    </PropertyGroup>
+    
     <ItemGroup>
         <Using Include="NSubstitute"/>
         <Using Include="Shouldly"/>
@@ -21,10 +26,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\Immutable\Immutable.csproj" />
-      <ProjectReference Include="..\..\src\Immutable.SourceGeneration\Immutable.SourceGeneration.csproj"
+        <ProjectReference Include="..\..\src\Immutable\Immutable.csproj" />        
+        <ProjectReference Include="..\..\src\Immutable.SourceGeneration\Immutable.SourceGeneration.csproj"
                           OutputItemType="Analyzer"
                           ReferenceOutputAssembly="false" />
     </ItemGroup>
-
 </Project>

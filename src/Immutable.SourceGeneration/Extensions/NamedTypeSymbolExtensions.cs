@@ -1,5 +1,6 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Toarnbeike.Immutable.SourceGeneration.TypeInformation;
 
 namespace Toarnbeike.Immutable.SourceGeneration.Extensions;
 
