@@ -2,7 +2,7 @@
 using Microsoft.CodeAnalysis;
 using Toarnbeike.Immutable.SourceGeneration.TypeInformation;
 
-namespace Toarnbeike.Immutable.SourceGeneration.Tests.Entities;
+namespace Toarnbeike.Immutable.SourceGeneration.Tests.TypeInformation;
 
 public class EntityKeyInfoTests
 {

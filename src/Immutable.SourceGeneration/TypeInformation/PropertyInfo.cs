@@ -11,7 +11,7 @@ internal record PropertyInfo
     public bool HasDefaultValue { get; }
     public bool IsValueType { get; }
 
-    internal PropertyInfo(string name, string typeName, bool isReadOnly, bool hasDefaultValue, bool isValueType) =>
+    internal PropertyInfo(string name, string typeName, bool isReadOnly = false, bool hasDefaultValue = false, bool isValueType = false) =>
         (Name, TypeName, IsReadOnly, HasDefaultValue, IsValueType) = (name, typeName, isReadOnly, hasDefaultValue, isValueType);
 
     public static PropertyInfo Create(IPropertySymbol propertySymbol)

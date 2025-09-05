@@ -8,36 +8,36 @@ internal static class CodeGenerationHelpers
     /// <summary>
     /// Converts a property name (PascalCase) into a parameter name (camelCase).
     /// </summary>
-    public static string ToParameterName(this string propertyName)
+    public static string ToParameterName(this PropertyInfo property)
     {
-        return propertyName.Length <= 1 
-            ? propertyName.ToLowerInvariant() 
-            : $"{char.ToLowerInvariant(propertyName[0])}{propertyName.Substring(1)}";
+        return property.Name.Length <= 1 
+            ? property.Name.ToLowerInvariant() 
+            : $"{char.ToLowerInvariant(property.Name[0])}{property.Name.Substring(1)}";
     }
     
     /// <summary>
     /// Converts a property name (PascalCase) into a private field name (_camelCase).
     /// </summary>
-    public static string ToPrivateFieldName(this string propertyName)
+    public static string ToPrivateFieldName(this PropertyInfo property)
     {
-        return propertyName.Length <= 1 
-            ? $"_{propertyName.ToLowerInvariant()}" 
-            : $"_{char.ToLowerInvariant(propertyName[0])}{propertyName.Substring(1)}";
+        return property.Name.Length <= 1 
+            ? $"_{property.Name.ToLowerInvariant()}" 
+            : $"_{char.ToLowerInvariant(property.Name[0])}{property.Name.Substring(1)}";
     }
 
-    private static string ToNullableTypName(this string typeName)
+    public static string ToNullableTypeName(this PropertyInfo property)
     {
-        if (typeName.EndsWith("?"))
+        if (property.TypeName.EndsWith("?"))
         {
-            return typeName;
+            return property.TypeName;
         }
 
-        if (typeName.StartsWith("global::Toarnbeike.Optional.Option<"))
+        if (property.TypeName.StartsWith("global::Toarnbeike.Optional.Option<"))
         {
-            return typeName.Substring(35, typeName.Length - 36) + "?";
+            return property.TypeName.Substring(35, property.TypeName.Length - 36) + "?";
         }
 
-        return typeName + "?";
+        return property.TypeName + "?";
     }
     /// <summary>
     /// Generates a parameter list from a collection of <see cref="PropertyInfo" />.
@@ -56,13 +56,13 @@ internal static class CodeGenerationHelpers
         
         segments.AddRange(properties
             .Where(p => !p.IsReadOnly && !p.HasDefaultValue)
-            .Select(p => $"{p.TypeName} {p.Name.ToParameterName()}"));
+            .Select(p => $"{p.TypeName} {p.ToParameterName()}"));
 
         if (includeDefault)
         {
             segments.AddRange(properties
                 .Where(p => !p.IsReadOnly && p.HasDefaultValue)
-                .Select(p => $"{p.TypeName.ToNullableTypName()} {p.Name.ToParameterName()} = null"));
+                .Select(p => $"{p.ToNullableTypeName()} {p.ToParameterName()} = null"));
         }
 
         return string.Join(", ", segments);
@@ -80,9 +80,9 @@ internal static class CodeGenerationHelpers
 
     private static string ToNotNullAssignment(this PropertyInfo property, string intermediateResult) =>
         $$"""
-                 if ({{property.Name.ToParameterName()}} is not null)
+                 if ({{property.ToParameterName()}} is not null)
                  {
-                    {{intermediateResult}} = {{intermediateResult}} with { {{property.Name}} = {{property.Name.ToParameterName()}}{{(property.IsValueType ? ".Value" : "")}} };
+                    {{intermediateResult}} = {{intermediateResult}} with { {{property.Name}} = {{property.ToParameterName()}}{{(property.IsValueType ? ".Value" : "")}} };
                  }
          """;
     
@@ -93,6 +93,6 @@ internal static class CodeGenerationHelpers
     {
         return string.Join("\n        ",
             properties.Where(p => !p.IsReadOnly && !p.HasDefaultValue)
-                .Select(p => $"{p.Name} = {p.Name.ToParameterName()};"));
+                .Select(p => $"{p.Name} = {p.ToParameterName()};"));
     }
 }
