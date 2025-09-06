@@ -1,4 +1,4 @@
-namespace Toarnbeike.Immutable.Entities;
+namespace Toarnbeike.Immutable.Abstractions.Entities;
 
 /// <summary>
 /// Specifies that a record is an EntityKey

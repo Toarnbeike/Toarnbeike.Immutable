@@ -3,18 +3,13 @@ using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
+using Toarnbeike.Immutable.Abstractions.Entities;
 using Toarnbeike.Immutable.SourceGeneration.Entities;
 using Toarnbeike.Immutable.SourceGeneration.Repositories;
 using Toarnbeike.Immutable.SourceGeneration.TypeInformation;
 
 namespace Toarnbeike.Immutable.SourceGeneration;
 
-/* Todo: De grote Generator verbouwing:
- * - Unit testen schrijven voor de Execute methods op de static generator classes.
- * - Verbeterde unit testen voor de EntityKeyInfo, AggregateInfo en PropertyInfo
- * - Doordat de Info objecten aangemaakt kunnen worden zonder Source generator wordt de unit test eenvoudig maar krachtig.
- * - De create methods op de Info classes testen dmv RoslynTestHelper.GetNamedTypeSymbol().
- */
 /// <summary>
 /// Generates a partial implementation of an Entity{TKey},
 /// given that the entity contains an [Aggregate] attribute.
@@ -63,7 +58,7 @@ public class ToarnbeikeImmutableGenerator : IIncrementalGenerator
     private static IncrementalValuesProvider<AggregateInfo?> GetAggregates(SyntaxValueProvider syntax) =>
         syntax
             .ForAttributeWithMetadataName(
-                AggregateInfo.AggregateAttributeFqn,
+                typeof(AggregateAttribute).FullName!,
                 predicate: static (node, _) => true,
                 transform: (ctx, _) => AggregateInfo.Create((INamedTypeSymbol)ctx.TargetSymbol))
             .Where(static aggregate => aggregate is not null);
@@ -71,7 +66,7 @@ public class ToarnbeikeImmutableGenerator : IIncrementalGenerator
     private static IncrementalValuesProvider<EntityKeyInfo?> GetEntityKeys(SyntaxValueProvider syntax) =>
         syntax
             .ForAttributeWithMetadataName(
-                EntityKeyInfo.EntityKeyAttributeFqn,
+                typeof(EntityKeyAttribute).FullName!,
                 predicate: static (node, _) => node is RecordDeclarationSyntax,
                 transform: static (ctx, _) => EntityKeyInfo.Create((INamedTypeSymbol)ctx.TargetSymbol))
             .Where(static m => m is not null);

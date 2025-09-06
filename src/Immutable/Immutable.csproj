@@ -26,4 +26,8 @@
         <PackageReference Include="Toarnbeike.Results.Messaging" Version="1.0.0" />
     </ItemGroup>
     
+    <ItemGroup>
+      <ProjectReference Include="..\Immutable.Abstractions\Immutable.Abstractions.csproj" />
+    </ItemGroup>
+    
 </Project>

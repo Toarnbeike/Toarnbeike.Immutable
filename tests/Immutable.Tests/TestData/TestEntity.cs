@@ -1,4 +1,5 @@
-﻿using Toarnbeike.Immutable.Entities;
+﻿using Toarnbeike.Immutable.Abstractions.Entities;
+using Toarnbeike.Immutable.Entities;
 using Toarnbeike.Optional;
 
 namespace Toarnbeike.Immutable.Tests.TestData;

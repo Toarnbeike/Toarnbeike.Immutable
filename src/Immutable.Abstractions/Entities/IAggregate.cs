@@ -1,4 +1,4 @@
-namespace Toarnbeike.Immutable.Entities;
+namespace Toarnbeike.Immutable.Abstractions.Entities;
 
 /// <summary>
 /// Contract for a domain entity that acts as an aggregate root in the domain.

@@ -5,8 +5,6 @@ namespace Toarnbeike.Immutable.SourceGeneration.TypeInformation;
 
 internal record AggregateInfo : TypeInfo
 {
-    public const string AggregateAttributeFqn = "Toarnbeike.Immutable.Entities.AggregateAttribute";
-
     public EntityKeyInfo EntityKeyInfo { get; }
     public IReadOnlyList<PropertyInfo> Properties { get; }
     
