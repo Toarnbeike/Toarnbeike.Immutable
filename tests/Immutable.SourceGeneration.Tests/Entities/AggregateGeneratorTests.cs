@@ -25,7 +25,7 @@ public class AggregateGeneratorTests
         List<PropertyInfo> properties = 
             [_settableProperty, _readOnlyProperty, _defaultValueTypeProperty, _defaultReferenceProperty];
         _entityKeyInfo = new EntityKeyInfo("AggregateKey", "KeyNamespace");
-        _aggregateInfo = new AggregateInfo("Aggregate", "AggregateNamespace", _entityKeyInfo, properties);
+        _aggregateInfo = new AggregateInfo("Aggregate", "AggregateNamespace", _entityKeyInfo, null, properties);
     }
 
     [Fact]

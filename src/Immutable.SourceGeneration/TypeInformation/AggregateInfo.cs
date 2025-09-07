@@ -1,10 +1,12 @@
 using Microsoft.CodeAnalysis;
+using Toarnbeike.Immutable.Abstractions.Entities;
 using Toarnbeike.Immutable.SourceGeneration.Extensions;
 
 namespace Toarnbeike.Immutable.SourceGeneration.TypeInformation;
 
 internal record AggregateInfo : TypeInfo
 {
+    public string PluralName { get; }
     public EntityKeyInfo EntityKeyInfo { get; }
     public IReadOnlyList<PropertyInfo> Properties { get; }
     
@@ -12,13 +14,15 @@ internal record AggregateInfo : TypeInfo
     {
         Name = typeSymbol.Name;
         Namespace = typeSymbol.ContainingNamespace!.ToDisplayString();
+        PluralName = GetPluralName(typeSymbol);
         Properties = typeSymbol.GetOrderedProperties();
         EntityKeyInfo = entityKeyInfo;
     }
 
-    public AggregateInfo(string name, string @namespace, EntityKeyInfo entityKeyInfo,
+    public AggregateInfo(string name, string @namespace, EntityKeyInfo entityKeyInfo, string? pluralName = null, 
         params IReadOnlyList<PropertyInfo> properties) : base(name, @namespace)
     {
+        PluralName = pluralName ?? name + "s";
         EntityKeyInfo = entityKeyInfo;
         Properties = properties;
     }
@@ -47,4 +51,8 @@ internal record AggregateInfo : TypeInfo
             ? new AggregateInfo(typeSymbol, keyInfo) 
             : null;
     }
+
+    private static string GetPluralName(INamedTypeSymbol typeSymbol) =>
+        typeSymbol.GetAttributeProperty<AggregateAttribute, string?>(attr => attr.PluralName) ??
+            typeSymbol.Name + "s";
 }

@@ -24,7 +24,7 @@ public class RepositoryGeneratorTests
         List<PropertyInfo> properties = 
             [_settableProperty, _readOnlyProperty, _defaultValueTypeProperty, _defaultReferenceProperty];
         var entityKeyInfo = new EntityKeyInfo("AggregateKey", "KeyNamespace");
-        _aggregateInfo = new AggregateInfo("AggregateEntity", "AggregateNamespace", entityKeyInfo, properties);
+        _aggregateInfo = new AggregateInfo("AggregateEntity", "AggregateNamespace", entityKeyInfo, "AggregateEntities", properties);
     }
     
     [Fact]
@@ -62,7 +62,7 @@ public class RepositoryGeneratorTests
     public void Execute_Should_IncludeStaticUsings()
     {
         var result = RepositoryGenerator.Execute(_aggregateInfo);
-        result.ShouldContain("using Toarnbeike.Immutable.Internal;");
+        result.ShouldContain("using Toarnbeike.Immutable.Internal.DataContext;");
         result.ShouldContain("using Toarnbeike.Immutable.Mutations;");
         result.ShouldContain("using Toarnbeike.Immutable.Repositories;");
     }
@@ -106,6 +106,6 @@ public class RepositoryGeneratorTests
     public void Execute_Should_IncludeSetterForEntities()
     {
         var result = RepositoryGenerator.Execute(_aggregateInfo);
-        result.ShouldContain("Entities = dataContext.AggregateEntitys;");
+        result.ShouldContain("Entities = dataContext.AggregateEntities;");
     }
 }

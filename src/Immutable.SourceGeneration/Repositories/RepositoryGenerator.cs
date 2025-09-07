@@ -1,5 +1,4 @@
-﻿using Toarnbeike.Immutable.SourceGeneration.Entities;
-using Toarnbeike.Immutable.SourceGeneration.TypeInformation;
+﻿using Toarnbeike.Immutable.SourceGeneration.TypeInformation;
 
 namespace Toarnbeike.Immutable.SourceGeneration.Repositories;
 
@@ -16,7 +15,7 @@ internal static class RepositoryGenerator
                  #nullable enable
 
                  using {{aggregate.EntityKeyInfo.Namespace}};
-                 using Toarnbeike.Immutable.Internal;
+                 using Toarnbeike.Immutable.Internal.DataContext;
                  using Toarnbeike.Immutable.Mutations;
                  using Toarnbeike.Immutable.Repositories;
 
@@ -28,7 +27,7 @@ internal static class RepositoryGenerator
                  {
                      public {{repoName}}(IMutationStore mutationStore, IDataContext dataContext) : base(mutationStore)
                      {
-                         Entities = dataContext.{{aggregate.Name}}s;
+                         Entities = dataContext.{{aggregate.PluralName}};
                      }
                  }
                  """;

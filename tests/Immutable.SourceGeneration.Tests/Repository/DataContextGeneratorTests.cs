@@ -12,7 +12,7 @@ public class DataContextGeneratorTests
     public DataContextGeneratorTests()
     {
         var aggregate1 = new AggregateInfo("Agg1", "Ns1", new EntityKeyInfo("Key1", "nsKey1"));
-        var aggregate2 = new AggregateInfo("Agg2", "Ns2", new EntityKeyInfo("Key2", "nsKey2"));
+        var aggregate2 = new AggregateInfo("Agg2", "Ns2", new EntityKeyInfo("Key2", "nsKey2"), "Agg2Collection");
 
         _aggregates = [aggregate1, aggregate2];
     }
@@ -66,7 +66,7 @@ public class DataContextGeneratorTests
     {
         var result = DataContextGenerator.Execute(_aggregates);
         result.ShouldContain("Dictionary<Key1, Agg1> Agg1s { get; }");
-        result.ShouldContain("Dictionary<Key2, Agg2> Agg2s { get; }");
+        result.ShouldContain("Dictionary<Key2, Agg2> Agg2Collection { get; }");
     }
     
     [Fact]
@@ -74,6 +74,6 @@ public class DataContextGeneratorTests
     {
         var result = DataContextGenerator.Execute(_aggregates);
         result.ShouldContain("public Dictionary<Key1, Agg1> Agg1s { get; private set; } = new();");
-        result.ShouldContain("public Dictionary<Key2, Agg2> Agg2s { get; private set; } = new();");
+        result.ShouldContain("public Dictionary<Key2, Agg2> Agg2Collection { get; private set; } = new();");
     }
 }
