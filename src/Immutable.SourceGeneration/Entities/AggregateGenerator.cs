@@ -29,9 +29,10 @@ internal static class AggregateGenerator
                  #nullable enable
 
                  using {{aggregate.EntityKeyInfo.Namespace}};
+                 using Toarnbeike.Immutable.Abstractions.Entities;
 
                  namespace {{aggregate.Namespace}};
-                 public partial record {{aggregate.Name}}
+                 public partial record {{aggregate.Name}} : IAggregate
                  {
                      /// <summary>
                      /// Create a new instance of the {{aggregate.Name}}.

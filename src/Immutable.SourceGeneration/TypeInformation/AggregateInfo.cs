@@ -30,7 +30,6 @@ internal record AggregateInfo : TypeInfo
     /// <summary>
     /// Tries to create a new AggregateInfo from an INamedTypeSymbol.
     /// Will work only if a couple of checks are passed:
-    /// - Implements the IAggregate interface
     /// - Implements IEntity{TKey}
     /// - Has proper namespace
     /// </summary>
@@ -38,7 +37,6 @@ internal record AggregateInfo : TypeInfo
     public static AggregateInfo? Create(INamedTypeSymbol typeSymbol)
     {
         var baseTypes = typeSymbol.AllInterfaces;
-        var hasIAggregate = baseTypes.Any(i => i.Name == "IAggregate" && i.TypeArguments.Length == 0);
         var hasNameSpace = typeSymbol.ContainingNamespace is not null && !typeSymbol.ContainingNamespace.IsGlobalNamespace;
         
         var entityInterface = baseTypes.FirstOrDefault(i => i.Name == "IEntity" && i.TypeArguments.Length == 1);
@@ -47,7 +45,7 @@ internal record AggregateInfo : TypeInfo
             ? EntityKeyInfo.Create(keyType) 
             : null;
         
-        return hasIAggregate && hasEntity && hasNameSpace && keyInfo is not null
+        return hasEntity && hasNameSpace && keyInfo is not null
             ? new AggregateInfo(typeSymbol, keyInfo) 
             : null;
     }

@@ -31,6 +31,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Immutable.SourceGeneration.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Immutable.Abstractions", "src\Immutable.Abstractions\Immutable.Abstractions.csproj", "{8B9298D3-A557-4D15-B94E-4699A5836677}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "playground", "playground", "{403E0E71-50BA-4410-ABBB-9F7DF772F300}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsolePlayground", "..\Immutable.PlaygroundApp\ConsolePlayground\ConsolePlayground.csproj", "{E46D5609-5F20-42E4-AD9A-86E2CE4D1DE5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +61,10 @@ Global
 		{8B9298D3-A557-4D15-B94E-4699A5836677}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8B9298D3-A557-4D15-B94E-4699A5836677}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8B9298D3-A557-4D15-B94E-4699A5836677}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E46D5609-5F20-42E4-AD9A-86E2CE4D1DE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E46D5609-5F20-42E4-AD9A-86E2CE4D1DE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E46D5609-5F20-42E4-AD9A-86E2CE4D1DE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E46D5609-5F20-42E4-AD9A-86E2CE4D1DE5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -67,6 +75,7 @@ Global
 		{D15BB751-D29C-4A89-85FF-26764DBA4C8F} = {FCC64D30-CD67-40D9-B7FD-0520333A50AB}
 		{971F14A8-B516-47E5-9AE2-C2D2E00F3B33} = {6CA56E57-9942-474C-849E-15CED7D017E4}
 		{8B9298D3-A557-4D15-B94E-4699A5836677} = {FCC64D30-CD67-40D9-B7FD-0520333A50AB}
+		{E46D5609-5F20-42E4-AD9A-86E2CE4D1DE5} = {403E0E71-50BA-4410-ABBB-9F7DF772F300}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DF0DB776-BD00-4D9B-ABA0-EFEFFCF81608}

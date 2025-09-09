@@ -5,7 +5,7 @@ using Toarnbeike.Optional;
 namespace Toarnbeike.Immutable.Tests.TestData;
 
 [Aggregate(PluralName = "TestEntities")]
-public sealed partial record TestEntity : Entity<TestEntityId>, IAggregate
+public sealed partial record TestEntity : Entity<TestEntityId>
 {
     public string Name { get; init; }
     public Option<string> Description { get; init; } = Option.None;
