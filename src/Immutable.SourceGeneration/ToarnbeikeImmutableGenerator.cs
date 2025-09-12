@@ -23,6 +23,7 @@ public class ToarnbeikeImmutableGenerator : IIncrementalGenerator
     {
         //if (!Debugger.IsAttached) Debugger.Launch();
         var aggregates = GetAggregates(context.SyntaxProvider);
+        var valueObjects = GetValueObjects(context.SyntaxProvider);
         var entityKeys = GetEntityKeys(context.SyntaxProvider);
         var aggregateCollectionWithAssembly =
             aggregates.Collect().Combine(context.CompilationProvider)
@@ -32,6 +33,11 @@ public class ToarnbeikeImmutableGenerator : IIncrementalGenerator
         context.RegisterSourceOutput(aggregates, static (spc, aggregate) =>
             spc.AddSource(AggregateGenerator.FileName(aggregate!), 
                 SourceText.From(AggregateGenerator.Execute(aggregate!), Encoding.UTF8)));
+        
+        // ValueObjectGenerator
+        context.RegisterSourceOutput(valueObjects, static (spc, valueObject) =>
+            spc.AddSource(ValueObjectGenerator.FileName(valueObject!),
+                SourceText.From(ValueObjectGenerator.Execute(valueObject!), Encoding.UTF8)));
         
         // EntityKeyGenerator
         context.RegisterSourceOutput(entityKeys, static (spc, key) =>
@@ -62,6 +68,14 @@ public class ToarnbeikeImmutableGenerator : IIncrementalGenerator
                 predicate: static (node, _) => true,
                 transform: (ctx, _) => AggregateInfo.Create((INamedTypeSymbol)ctx.TargetSymbol))
             .Where(static aggregate => aggregate is not null);
+    
+    private static IncrementalValuesProvider<ValueObjectInfo?> GetValueObjects(SyntaxValueProvider syntax) =>
+        syntax
+            .ForAttributeWithMetadataName(
+                typeof(ValueObjectAttribute).FullName!,
+                predicate: static (node, _) => true,
+                transform: (ctx, _) => ValueObjectInfo.Create((INamedTypeSymbol)ctx.TargetSymbol))
+            .Where(static valueObject => valueObject is not null);
     
     private static IncrementalValuesProvider<EntityKeyInfo?> GetEntityKeys(SyntaxValueProvider syntax) =>
         syntax
